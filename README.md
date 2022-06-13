@@ -161,3 +161,10 @@ and see if this changes anything
 noticably in the website display.
 
 
+## Extra
+Added during migrate
+
+socialaccount.0004_auto_20220613_1529
+    Alter field id on socialaccount
+    Alter field id on socialapp
+    Alter field id on socialtoken
