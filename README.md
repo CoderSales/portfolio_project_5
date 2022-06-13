@@ -106,3 +106,58 @@ Yes! We'd strongly encourage you to look at the source code of the `uptime.sh` f
 ---
 
 Happy coding!
+
+
+## Issues during walkthrough tutorial
+Error with page display
+Copied code for base.html from source code.
+Solved issue
+Assumption:
+- That even though the video has some outdated features, highlighted in the notes,
+these have been fixed in the GitHub Repository Source Code.
+Issue:
+differences with original typed code and source code pasted from repo.
+
+line 18 had:
+
+```
+href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+```
+
+not:
+
+```
+href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+```
+
+line 24 had:
+
+```
+href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+```
+
+not:
+
+```
+href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+```
+
+line 26 had:
+```
+href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+```
+
+not:
+
+```
+href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+```
+
+
+### One possible solution
+change these three lines 
+(from the "not" value to the "had" value above, which was typed originally before the bug)
+and see if this changes anything
+noticably in the website display.
+
+
