@@ -168,3 +168,11 @@ socialaccount.0004_auto_20220613_1529
     Alter field id on socialaccount
     Alter field id on socialapp
     Alter field id on socialtoken
+
+# Note on commit 42f9854
+## Title should be:
+Added sorting JS and back to top link
+## views.py
+ subpoint should be:
+ import Lower
+
