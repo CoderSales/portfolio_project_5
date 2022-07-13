@@ -180,3 +180,5 @@ Added sorting JS and back to top link
 ## Title should be:
 Wired up update button
 
+# Update jquery
+- [jquery update](https://releases.jquery.com/)
