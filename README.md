@@ -176,3 +176,7 @@ Added sorting JS and back to top link
  subpoint should be:
  import Lower
 
+# Note on commit dac110
+## Title should be:
+Wired up update button
+
