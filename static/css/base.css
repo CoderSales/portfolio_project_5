@@ -106,7 +106,7 @@ a.category-badge > span.badge:hover {
     position: fixed;
     top: 72px;
     right: 15px;
-    z-index:99999999999;
+    z-index: 99999999999;
 }
 
 .custom-toast {
