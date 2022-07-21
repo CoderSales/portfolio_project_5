@@ -182,3 +182,15 @@ Wired up update button
 
 # Update jquery
 - [jquery update](https://releases.jquery.com/)
+
+# Note to User
+- Do not delete product accidentally, as there is no prompt for confirmation.
+
+- On opening environment run
+``` pip install -r requirements.txt```
+
+- Then make migrations
+python3 manage.py makemigrations --dry-run
+python3 manage.py makemigrations
+python3 manage.py migrate --plan
+python3 manage.py migrate
