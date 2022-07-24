@@ -194,3 +194,6 @@ python3 manage.py makemigrations --dry-run
 python3 manage.py makemigrations
 python3 manage.py migrate --plan
 python3 manage.py migrate
+
+# Command to export all linter errors
+```python3 -m flake8```
