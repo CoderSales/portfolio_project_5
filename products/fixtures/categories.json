@@ -2,63 +2,28 @@
     "pk": 1,
     "model": "products.category",
     "fields": {
-        "name": "activewear",
-        "friendly_name": "Activewear"
+        "name": "woodwind",
+        "friendly_name": "Woodwind"
     }
 }, {
     "pk": 2,
     "model": "products.category",
     "fields": {
-        "name": "bed_bath",
-        "friendly_name": "Bed & Bath"
+        "name": "strings",
+        "friendly_name": "Strings"
     }
 }, {
     "pk": 3,
     "model": "products.category",
     "fields": {
-        "name": "clearance",
-        "friendly_name": "Clearance"
+        "name": "wind",
+        "friendly_name": "Wind"
     }
 }, {
     "pk": 4,
     "model": "products.category",
     "fields": {
-        "name": "deals",
-        "friendly_name": "Deals"
-    }
-}, {
-    "pk": 5,
-    "model": "products.category",
-    "fields": {
-        "name": "essentials",
-        "friendly_name": "Essentials"
-    }
-}, {
-    "pk": 6,
-    "model": "products.category",
-    "fields": {
-        "name": "jeans",
-        "friendly_name": "Jeans"
-    }
-}, {
-    "pk": 7,
-    "model": "products.category",
-    "fields": {
-        "name": "kitchen_dining",
-        "friendly_name": "Kitchen & Dining"
-    }
-}, {
-    "pk": 8,
-    "model": "products.category",
-    "fields": {
-        "name": "new_arrivals",
-        "friendly_name": "New Arrivals"
-    }
-}, {
-    "pk": 9,
-    "model": "products.category",
-    "fields": {
-        "name": "shirts",
-        "friendly_name": "Shirts"
+        "name": "brass",
+        "friendly_name": "Brass"
     }
 }]
