@@ -1,6 +1,10 @@
 ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
 
+<<<<<<< HEAD
 Welcome Coder731,
+=======
+Welcome USER_NAME,
+>>>>>>> c3f98fa0a4b60ae11fa3f82c8c698e6e641c537d
 
 This is the Code Institute student template for Gitpod. We have preinstalled all of the tools you need to get started. It's perfectly ok to use this template as the basis for your project submissions.
 
@@ -106,6 +110,7 @@ Yes! We'd strongly encourage you to look at the source code of the `uptime.sh` f
 ---
 
 Happy coding!
+<<<<<<< HEAD
 
 
 ## Issues during walkthrough tutorial
@@ -197,3 +202,5 @@ python3 manage.py migrate
 
 # Command to export all linter errors
 ```python3 -m flake8```
+=======
+>>>>>>> c3f98fa0a4b60ae11fa3f82c8c698e6e641c537d
