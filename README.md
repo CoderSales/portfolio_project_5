@@ -208,3 +208,18 @@ python3 manage.py migrate
 ## Acknowledgements
 
 - [ChatGPT Codex](https://openai.com/codex/) — assisted with dependency security updates, Python compatibility checks, and testing.
+
+## Dependency and authentication checks
+
+With a Python 3.10 virtual environment active, run:
+
+```sh
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip check
+python manage.py test profiles --settings=portfolio_project_5.test_settings
+```
+
+The pinned `django-allauth` 0.50.0 includes the [upstream setuptools compatibility fix](https://allauth.org/news/2022/03/django-allauth-0.50.0-released/). `django-countries` 7.6.1 also removes its dependency on the retired `pkg_resources` module. No setuptools downgrade or extra build constraint is required.
+
+GitHub Actions checks a fresh installation with current pip and setuptools, then tests the account flows on Linux. Tests use an in-memory database and capture email locally; they do not use the deployed database or send real email.
