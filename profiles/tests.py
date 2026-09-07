@@ -58,6 +58,45 @@ class AccountFlowTests(TestCase):
                 self.assertEqual(self.client.session[SESSION_KEY], str(self.user.pk))
                 self.client.logout()
 
+    def test_authentication_forms_render_with_bootstrap_fields(self):
+        pages = (
+            ("account_login", "account/login.html", ("login", "password")),
+            (
+                "account_signup", "account/signup.html",
+                ("username", "email", "email2", "password1", "password2"),
+            ),
+            ("account_reset_password", "account/password_reset.html", ("email",)),
+        )
+        for url_name, template, fields in pages:
+            with self.subTest(page=url_name):
+                response = self.client.get(reverse(url_name))
+                self.assertEqual(response.status_code, 200)
+                self.assertTemplateUsed(response, template)
+                for field in fields:
+                    self.assertContains(response, f'name="{field}"')
+                self.assertContains(response, "form-control")
+
+    def test_signup_rejects_short_username_and_mismatched_email(self):
+        data = {
+            "username": "new_account",
+            "email": "new-account@example.invalid",
+            "email2": "new-account@example.invalid",
+            "password1": self.password,
+            "password2": self.password,
+        }
+        for field, value in (("username", "abc"), ("email2", "typo@example.invalid")):
+            with self.subTest(field=field):
+                response = self.client.post(
+                    reverse("account_signup"), {**data, field: value}
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertIn(field, response.context["form"].errors)
+                self.assertFalse(
+                    get_user_model().objects.filter(email=data["email"]).exists()
+                )
+                self.assertNotIn(SESSION_KEY, self.client.session)
+        self.assertEqual(len(mail.outbox), 0)
+
     def test_unverified_login_email_is_blocked_even_with_verified_primary(self):
         secondary = EmailAddress.objects.create(
             user=self.user, email="unverified@example.invalid", verified=False
@@ -154,6 +193,74 @@ class AccountFlowTests(TestCase):
         self.assertEqual(limited.status_code, 429)
         self.assertTemplateUsed(limited, "429.html")
         self.assertEqual(len(mail.outbox), 5, "Rate-limited requests must not send mail")
+
+    def test_spoofed_forwarded_ip_cannot_bypass_password_reset_limit(self):
+        url = reverse("account_reset_password")
+        # Different email keys avoid the separate five-per-minute email limit.
+        # Rotating an untrusted header must not bypass twenty requests per IP.
+        for attempt in range(20):
+            response = self.client.post(
+                url,
+                {"email": f"missing-{attempt}@example.invalid"},
+                REMOTE_ADDR="192.0.2.1",
+                HTTP_X_FORWARDED_FOR=f"198.51.100.{attempt + 1}",
+            )
+            self.assertRedirects(
+                response, reverse("account_reset_password_done"),
+                fetch_redirect_response=False,
+            )
+        limited = self.client.post(
+            url,
+            {"email": "missing-20@example.invalid"},
+            REMOTE_ADDR="192.0.2.1",
+            HTTP_X_FORWARDED_FOR="198.51.100.21",
+        )
+        self.assertEqual(limited.status_code, 429)
+        self.assertTemplateUsed(limited, "429.html")
+        self.assertEqual(len(mail.outbox), 20)
+
+    def test_emailed_password_reset_changes_password_and_token_cannot_be_reused(self):
+        response = self.client.post(
+            reverse("account_reset_password"), {"email": self.user.email}
+        )
+        self.assertRedirects(response, reverse("account_reset_password_done"))
+        reset_link = re.search(
+            r"https?://[^\s]+/accounts/password/reset/key/[^\s]+", mail.outbox[0].body
+        )
+        self.assertIsNotNone(reset_link)
+        reset_path = urlsplit(reset_link.group()).path
+        reset_page = self.client.get(reset_path, follow=True)
+        self.assertEqual(reset_page.status_code, 200)
+        self.assertTemplateUsed(reset_page, "account/password_reset_from_key.html")
+        self.assertFalse(reset_page.context.get("token_fail", False))
+        self.assertContains(reset_page, 'name="password1"')
+        self.assertContains(reset_page, 'name="password2"')
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(self.password))
+
+        new_password = "Changed-auth-regression-2026!"
+        changed = self.client.post(
+            reset_page.context["action_url"],
+            {"password1": new_password, "password2": new_password},
+        )
+        self.assertRedirects(changed, reverse("account_reset_password_from_key_done"))
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(new_password))
+        self.assertFalse(self.user.check_password(self.password))
+        self.assertNotIn(SESSION_KEY, self.client.session)
+
+        reused = self.client.get(reset_path, follow=True)
+        self.assertEqual(reused.status_code, 200)
+        self.assertTrue(reused.context["token_fail"])
+        self.assertNotContains(reused, 'name="password1"')
+        rejected = self.client.post(
+            reset_path,
+            {"password1": self.password, "password2": self.password},
+            follow=True,
+        )
+        self.assertTrue(rejected.context["token_fail"])
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(new_password))
 
 
 class ProfileCountryTests(TestCase):
