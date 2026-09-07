@@ -204,3 +204,7 @@ python3 manage.py migrate
 ```python3 -m flake8```
 =======
 >>>>>>> c3f98fa0a4b60ae11fa3f82c8c698e6e641c537d
+
+## Acknowledgements
+
+- [ChatGPT Codex](https://openai.com/codex/) — assisted with dependency security updates, Python compatibility checks, and testing.
