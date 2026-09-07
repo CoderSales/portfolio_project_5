@@ -210,9 +210,21 @@ With a Python 3.10 virtual environment active, run:
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 python -m pip check
-python manage.py test profiles --settings=portfolio_project_5.test_settings
+python manage.py test profiles portfolio_project_5 --settings=portfolio_project_5.test_settings
 ```
 
-The pinned `django-allauth` 0.50.0 includes the [upstream setuptools compatibility fix](https://allauth.org/news/2022/03/django-allauth-0.50.0-released/). `django-countries` 7.6.1 also removes its dependency on the retired `pkg_resources` module. No setuptools downgrade or extra build constraint is required.
+The tested pins use Django 5.2.17 with `asgiref` 3.12.1 and `django-allauth` 65.19.2. Bootstrap 4 forms use the separate `crispy-bootstrap4` package, and local/S3 storage uses Django’s `STORAGES` setting. No setuptools downgrade or extra build constraint is required.
 
-GitHub Actions checks a fresh installation with current pip and setuptools, then tests the account flows on Linux. Tests use an in-memory database and capture email locally; they do not use the deployed database or send real email.
+GitHub Actions checks a fresh installation with current pip and setuptools, then tests authentication and storefront pages on Linux. Tests use an in-memory database, capture email locally, and mock Stripe; they do not use the deployed database, send real email, or make payments.
+
+When upgrading an existing checkout, back up its database first, then review and apply the bundled Django/allauth migrations with the project’s normal database settings:
+
+```sh
+python manage.py showmigrations account socialaccount
+python manage.py migrate --plan
+python manage.py migrate
+```
+
+The historical notes above mention a locally generated `socialaccount.0004_auto_20220613_1529` migration. If your database used that migration, compare its schema/history with the upstream migrations before proceeding; do not rename migrations or use `--fake` to skip that review.
+
+The `migrate` command updates the database configured for that checkout. For PostgreSQL deployments, [Django 5.2 requires PostgreSQL 14 or later](https://docs.djangoproject.com/en/5.2/ref/databases/#postgresql-notes); SQLite is used for local development and the tests above.

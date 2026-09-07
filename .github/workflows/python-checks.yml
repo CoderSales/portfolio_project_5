@@ -22,5 +22,5 @@ jobs:
           python -m pip install --upgrade pip setuptools
           python -m pip --isolated install --no-cache-dir -r requirements.txt
           python -m pip check
-      - name: Test authentication with a temporary database and local email
-        run: python manage.py test profiles --settings=portfolio_project_5.test_settings
+      - name: Test authentication and storefront with isolated services
+        run: python manage.py test profiles portfolio_project_5 --settings=portfolio_project_5.test_settings

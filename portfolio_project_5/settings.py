@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     
     # Other
     'crispy_forms',
+    'crispy_bootstrap4',
     'storages',
 ]
 
@@ -59,12 +60,14 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'portfolio_project_5.urls'
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
@@ -104,10 +107,9 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
+ACCOUNT_SIGNUP_FIELDS = ['username*', 'email*', 'email2*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -158,8 +160,6 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 
@@ -171,6 +171,11 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STORAGES = {
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'},
+}
 
 if 'USE_AWS' in os.environ:
     # Cache control:
@@ -187,9 +192,11 @@ if 'USE_AWS' in os.environ:
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
     # Static and media files
-    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+    STORAGES = {
+        'default': {'BACKEND': 'custom_storages.MediaStorage'},
+        'staticfiles': {'BACKEND': 'custom_storages.StaticStorage'},
+    }
     STATICFILES_LOCATION = 'static'
-    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
     MEDIAFILES_LOCATION = 'media'
 
     # Override static and media URLs in production

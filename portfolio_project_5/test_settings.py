@@ -26,8 +26,10 @@ CACHES = {
         "LOCATION": "portfolio-project-5-auth-tests",
     }
 }
-DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
 MEDIA_URL = "/media/"
 STATIC_URL = "/static/"
 MEDIA_ROOT = Path(tempfile.gettempdir()) / "portfolio-project-5-test-media"
