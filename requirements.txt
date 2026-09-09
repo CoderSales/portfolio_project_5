@@ -9,7 +9,7 @@ django-countries==7.6.1
 django-crispy-forms==2.7
 crispy-bootstrap4==2026.2
 django-storages==1.14.6
-greenlet==1.1.2
+greenlet==3.5.5
 gunicorn==23.0.0
 jmespath==1.0.1
 oauthlib==3.2.2
